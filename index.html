@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home</title>
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<script type="text/javascript" src="count.js"></script>
+</head>
+<body>
+		<h2>
+			<a href="index.html">Home</a>
+			<a href="checkout.html">CheckOut<span id="item_count"></span></a>
+		</h2>
+
+		<table cellpadding="10" cellspacing="10">
+			<tr>
+				<td align="center">
+					<img src="images/coat.jpg" width="200" height="200">
+					<p>Name: Coat</p>
+					<p>price: 600000 MMK</p>
+					<button class="cart" data-id="1" data-name="coat" data-price="600000">Add to cart</button>
+				</td>
+				<td align="center">
+					<img src="images/hat.jpg" width="200" height="200">
+					<p>Name: Hat</p>
+					<p>price: 80000 MMK</p>
+					<button class="cart" data-id="2" data-name="hat" data-price="80000">Add to cart</button>
+				</td>
+				<td align="center">
+					<img src="images/rolex.jpg" width="200" height="200">
+					<p>Name: Watch</p>
+					<p>price: 1200000 MMK</p>
+					<button class="cart" data-id="3" data-name="watch" data-price="1200000">Add to cart</button>
+				</td>
+				<td align="center">
+					<img src="images/belt.jpg" width="200" height="200">
+					<p>Name: Belt</p>
+					<p>price: 160000 MMK</p>
+					<button class="cart" data-id="4" data-name="belt" data-price="160000">Add to cart</button>
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<img src="images/necklace.jpeg" width="200" height="200">
+					<p>Name: Necklace</p>
+					<p>price: 100000 MMK</p>
+					<button class="cart" data-id="5" data-name="necklace" data-price="100000">Add to cart</button>
+				</td>
+				<td align="center">
+					<img src="images/nike.jpeg" width="200" height="200">
+					<p>Name: Shoe</p>
+					<p>price: 200000 MMK</p>
+					<button class="cart" data-id="6" data-name="shoe" data-price="200000">Add to cart</button>
+				</td>
+				<td align="center">
+					<img src="images/handchain.jpg" width="200" height="200">
+					<p>Name: HandChain</p>
+					<p>price: 1600000 MMK</p>
+					<button class="cart" data-id="7" data-name="handchain" data-price="1600000">Add to cart</button>
+				</td>
+				<td align="center">
+					<img src="images/glass.jpg" width="200" height="200">
+					<p>Name: Glass</p>
+					<p>price: 300000 MMK</p>
+					<button class="cart" data-id="8" data-name="glass" data-price="300000">Add to cart</button>
+				</td>
+			</tr>
+		</table>
+
+
+		<script>
+			$(document).ready(function(){
+				count();
+				$('.cart').click(function(){
+					var item_id=$(this).data('id');
+					var item_name=$(this).data('name');
+					var item_price=$(this).data('price');
+					// console.log(item_id,item_name,item_price);		
+
+					var shop_item={
+						id:item_id,
+						name:item_name,
+						price:item_price,
+						qty:1
+					}
+
+					var shopString=localStorage.getItem('fash_shop');
+					var shopArray;
+					if(shopString==null){
+						shopArray=Array();
+					}else{
+						shopArray=JSON.parse(shopString);
+					}
+
+					var status=false;
+					$.each(shopArray,function(i,v){
+						if(item_id==v.id){
+							status=true;
+							v.qty++;
+						}
+					})
+					if(status==false){
+						shopArray.push(shop_item);
+					}
+
+					var shopData=JSON.stringify(shopArray);
+					localStorage.setItem('fash_shop',shopData);
+					count();
+				})
+			})
+		</script>
+</body>
+</html>

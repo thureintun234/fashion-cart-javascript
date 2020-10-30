@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Checkout</title>
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<script type="text/javascript" src="count.js"></script>
+</head>
+<body>
+		<h2>
+			<a href="index.html">Home</a>
+			<a href="checkout.html">CheckOut<span id="item_count"></span></a>
+		</h2>
+
+		<table border="1" cellpadding="10" cellspacing="0">
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>Item Name</th>
+					<th>Item Price</th>
+					<th>Qty</th>
+					<th>Sub Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+		</table><br>
+		<button id="order">Order</button>
+
+
+
+		<script>
+			$(document).ready(function(){
+				getData();
+
+				function getData(){
+					var shopString=localStorage.getItem('fash_shop');
+					if(shopString){
+						var shopArray=JSON.parse(shopString);
+
+						var total=0;
+						var no=1;
+						var html='';
+						$.each(shopArray,function(i,v){
+							var name=v.name;
+							var price=v.price;
+							var qty=v.qty;
+
+							html+=`<tr>
+										<td>${no++}</td>
+										<td>${name}</td>
+										<td>${price}</td>
+										<td><button class="min" data-item_i="${i}">-</button> ${qty} <button class="max" data-item_i="${i}">+</button></td>
+										<td>${price*qty}</td>
+									</tr>`
+									
+									total+=price*qty;
+						})
+							html+=`<tr>
+											<td colspan="4">Total</td>
+											<td>${total}</td>
+									</tr>`
+								$('tbody').html(html);
+					}else{
+						html='';
+						$('tbody').html(html);
+					}
+					count();
+			}
+
+
+				//increment
+				$('tbody').on('click','.max',function(){
+					var item_i=$(this).data('item_i');
+
+					var shopString=localStorage.getItem("fash_shop");
+					if(shopString){
+						var shopArray=JSON.parse(shopString);
+
+						//loop for check all data
+						$.each(shopArray,function(i,v){
+							if(item_i==i){
+								v.qty++;
+							}
+							var shopData=JSON.stringify(shopArray);
+							localStorage.setItem('fash_shop',shopData);
+							getData();
+						})
+					}
+				})
+
+				//decrement
+				$('tbody').on('click','.min',function(){
+					var item_i=$(this).data('item_i');
+
+					var shopString=localStorage.getItem("fash_shop");
+					if(shopString){
+						var shopArray=JSON.parse(shopString);
+
+						//loop for check all data
+						$.each(shopArray,function(i,v){
+							if(item_i==i){
+								v.qty--;
+								if(v.qty==0){
+									shopArray.splice(item_i,1);
+								}
+							}
+							var shopData=JSON.stringify(shopArray);
+							localStorage.setItem('fash_shop',shopData);
+							getData();
+						})
+					}
+				})
+
+				//order
+				$('#order').click(function(){
+					var ans=confirm("Are you sure Order!");
+					if(ans){
+						localStorage.clear();
+						getData();
+					}
+				})
+			})
+		</script>
+</body>
+</html>
